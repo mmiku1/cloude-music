@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import { defineComponent, defineProps, ref } from 'vue'
+import { defineComponent, defineProps, defineEmits, ref } from 'vue'
 import useScroll from '@/utils/use-scroll'
 
 defineComponent({
@@ -16,10 +16,16 @@ const props = defineProps({
   click: {
     type: Boolean,
     default: true
+  },
+  probeType: {
+    type: Number,
+    default: 0
   }
 })
 
+const emit = defineEmits(['scroll'])
+
 const rootRef = ref(null)
-useScroll(rootRef, props.click)
+useScroll(rootRef, props, emit)
 
 </script>

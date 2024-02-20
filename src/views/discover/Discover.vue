@@ -1,4 +1,3 @@
-Discover.vue:
 <template>
   <div class="discover">
     <rec-tab></rec-tab>

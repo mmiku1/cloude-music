@@ -2,15 +2,19 @@
   <my-header></my-header>
   <router-view></router-view>
   <my-bottom></my-bottom>
+  <comm-player></comm-player>
 </template>
 
 <script setup>
 import { defineComponent } from 'vue'
 import MyHeader from '@/components/header/Header.vue'
 import MyBottom from '@/components/bottom/Bottom.vue'
+import CommPlayer from '@/components/player/CommPlayer.vue'
+
 defineComponent({
   MyHeader,
-  MyBottom
+  MyBottom,
+  CommPlayer
 })
 
 </script>

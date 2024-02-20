@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import MyDiscover from '@/views/discover/Discover.vue'
 import MyRecommend from '@/views/Recommend.vue'
-import TheSinger from '@/views/Singer.vue'
+import TheSinger from '@/views/singer/Singer.vue'
+import SingerDetail from '@/views/singer/SingerDetail.vue'
 import MyPage from '@/views/MyPage.vue'
 import CareChoice from '@/views/discover/CareChoice.vue'
 import TopList from '@/views/TopList.vue'
@@ -43,7 +44,13 @@ const routes = [
   },
   {
     path: '/singer',
-    component: TheSinger
+    component: TheSinger,
+    children: [
+      {
+        path: ':id',
+        component: SingerDetail
+      }
+    ]
   },
   {
     path: '/mypage',
