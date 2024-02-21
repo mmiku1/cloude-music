@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref, watch, computed, reactive, toRef } from 'vue'
+import { defineProps, defineEmits, ref, watch, computed, reactive } from 'vue'
 
 const props = defineProps({
   progress: {
@@ -24,7 +24,7 @@ const props = defineProps({
     default: 0
   }
 })
-const progress = toRef(props.progress)
+
 const emit = defineEmits(['progress-changing', 'progress-changed'])
 
 const progressBtnWidth = 16
@@ -42,7 +42,7 @@ const btnStyle = computed(() => {
   return `transform:translate3D(${offset.value}px,0,0)`
 })
 
-watch(progress, (newProgress) => {
+watch(() => props.progress, (newProgress) => {
   offset.value = barWidth.value * newProgress
 })
 

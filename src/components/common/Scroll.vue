@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import { defineComponent, defineProps, defineEmits, ref } from 'vue'
+import { defineComponent, defineProps, defineEmits, ref, defineExpose } from 'vue'
 import useScroll from '@/utils/use-scroll'
 
 defineComponent({
@@ -26,6 +26,9 @@ const props = defineProps({
 const emit = defineEmits(['scroll'])
 
 const rootRef = ref(null)
-useScroll(rootRef, props, emit)
+const scroll = useScroll(rootRef, props, emit)
 
+defineExpose({
+  scroll
+})
 </script>

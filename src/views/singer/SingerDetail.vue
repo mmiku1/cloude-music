@@ -43,7 +43,7 @@ onBeforeMount(async () => {
   const { artist } = store.state.singerdata
   artistName.value = artist.name
   briefDesc.value = artist.briefDesc
-  alias.value = artist.alias[0]
+  alias.value = artist.alias.join('/')
   avatar.value = artist.avatar
 
   await store.dispatch('getSingerSongs', { id: getSingerId.value, order: 'hot', limit: 30 })
@@ -78,4 +78,3 @@ const getSingerId = computed(() => {
   background: $color-background;
 }
 </style>
-@/utils/constant

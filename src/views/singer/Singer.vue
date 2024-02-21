@@ -36,7 +36,7 @@ onBeforeMount(() => {
 const selectSinger = (id) => {
   singerId.value = id
   cacheSinger(id)
-  router.push(`/singer/${id}`)
+  router.push(`singer/${id}`)
 }
 
 const cacheSinger = (id) => {

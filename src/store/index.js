@@ -22,13 +22,15 @@ export default createStore({
     currentIndex: 0,
     fullScreen: false,
     currentsong: {},
-    favoritelist: load(FAVORITE_KEY)
+    favoritelist: load(FAVORITE_KEY),
+    songLyric: {}
   },
   getters: {
     // 当前歌曲
     currentSong: (state) => {
       return state.playlist[state.currentIndex] || {}
     }
+    //
   },
   mutations: {
     // 精选-轮播图
@@ -100,6 +102,20 @@ export default createStore({
       state.fullScreen = fullScreen
     },
 
+    // 添加歌词
+    addSongLyric(state, { song, lyric }) {
+      state.sequenceList.map((item) => {
+        if (item.id === song.id) {
+          item.lyric = lyric
+        }
+        return item
+      })
+    },
+
+    setSongLyric(state, lyric) {
+      state.songLyric = lyric
+    },
+
     setFavoriteList(state, list) {
       state.favoritelist = list
     }
@@ -166,6 +182,21 @@ export default createStore({
     async getSongDetail({ commit }, ids) {
       const { songs } = await http.get('/song/detail', ids)
       commit('setSongDetail', songs)
+    },
+
+    // 获取歌曲URL
+    async getSongURL({ commit }, id) {
+      const { data } = await http.get('/song/url', id)
+      const { url } = data[0]
+      return url
+    },
+
+    // 当前歌曲歌词
+    async getSongLyric({ commit }, id) {
+      const result = await http.get('/lyric', id)
+      const lrc = result?.lrc?.lyric
+      const tlyric = result?.tlyric?.lyric || ''
+      commit('setSongLyric', { lrc, tlyric })
     },
 
     // 顺序播放
