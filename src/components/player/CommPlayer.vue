@@ -1,25 +1,37 @@
 <template>
-  <div class="player">
-    <div class="normal-player" v-show="fullScreen">
-      <template v-if="currentsong">
+  <div class="player" v-show="playlist.length">
+    <transition
+      name="normal"
+      @enter="enter"
+      @after-enter="afterEnter"
+      @leave="leave"
+      @after-leave="afterLeave"
+    >
+      <div class="normal-player" v-show="fullScreen">
+        <!-- <template v-if="currentsong"> -->
         <div class="background">
-          <img :src="currentsong.al.picUrl" />
+          <img :src="currentsong?.al?.picUrl" />
         </div>
         <div class="top">
           <div class="back" @click="goBack">
             <i class="icon-back"></i>
           </div>
-          <h1 class="title">{{ currentsong.name }}</h1>
-          <h2 class="subtitle">{{ currentsong.ar.name }}</h2>
+          <h1 class="title">{{ currentsong?.name }}</h1>
+          <h2 class="subtitle">{{ currentsong?.ar?.name }}</h2>
         </div>
-        <div class="middle">
-          <div class="middle-l">
-            <div class="cd-wrapper">
+        <div
+          class="middle"
+          @touchstart.prevent="onMiddleTouchStart"
+          @touchmove.prevent="onMiddleTouchMove"
+          @touchend.prevent="onMiddleTouchEnd"
+        >
+          <div class="middle-l" :style="middleLStyle">
+            <div class="cd-wrapper" ref="cdWrapperRef">
               <div class="cd" ref="cdRef">
                 <img
                   class="image"
                   :class="cdCls"
-                  :src="currentsong.al.picUrl"
+                  :src="currentsong?.al?.picUrl"
                   ref="cdImageRef"
                 />
               </div>
@@ -29,7 +41,11 @@
               <div class="playing-lyric">{{ nextLyric }}</div>
             </div>
           </div>
-          <the-scroll class="middle-r" ref="lyricScrollRef">
+          <the-scroll
+            class="middle-r"
+            ref="lyricScrollRef"
+            :style="middleRStyle"
+          >
             <div class="lyric-wrapper">
               <div v-if="currentLyric" ref="lyricListRef">
                 <p
@@ -45,6 +61,13 @@
           </the-scroll>
         </div>
         <div class="bottom">
+          <div class="dot-wrapper">
+            <span class="dot" :class="{ active: currentShow === 'cd' }"></span>
+            <span
+              class="dot"
+              :class="{ active: currentShow === 'lyric' }"
+            ></span>
+          </div>
           <div class="progress-wrapper">
             <span class="time time-l">{{ formatTime(currentTime) }}</span>
             <div class="progress-bar-wrapper">
@@ -56,7 +79,7 @@
               </progress-bar>
             </div>
             <span class="time time-r">{{
-              formatTime(currentsong.dt / 1000)
+              formatTime(currentsong?.dt / 1000)
             }}</span>
           </div>
           <div class="operators">
@@ -80,8 +103,14 @@
             </div>
           </div>
         </div>
-      </template>
-    </div>
+        <!-- </template> -->
+      </div>
+    </transition>
+    <mini-player
+      v-if="currentsong"
+      :progress="progress"
+      :togglePlay="togglePlay"
+    ></mini-player>
     <audio
       ref="audioRef"
       @pause="pause"
@@ -94,20 +123,24 @@
 </template>
 
 <script setup>
+import ProgressBar from './ProgressBar.vue'
+import TheScroll from '../common/Scroll.vue'
+import MiniPlayer from './MiniPlayer.vue'
 import { computed, defineComponent, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import useMode from '@/utils/use-mode'
 import useFavorite from '@/utils/use-favorite'
 import useCd from '@/utils/use-cd'
 import useLyric from '@/utils/use-lyric'
-import ProgressBar from './ProgressBar.vue'
+import useMiddleInteractive from '@/utils/use-middle-interactive'
 import { formatTime } from '@/utils/play-tools'
 import { PLAY_MODE } from '@/utils/constant'
-import TheScroll from '../common/Scroll.vue'
+import useAnimation from '@/utils/use-animation'
 
 defineComponent({
   ProgressBar,
-  TheScroll
+  TheScroll,
+  MiniPlayer
 })
 
 let progressChanging = false
@@ -130,15 +163,18 @@ const disableCls = computed(() => {
   return songReady.value ? '' : 'disable'
 })
 const progress = computed(() => {
-  return currentTime.value / (currentsong.value.dt / 1000)
+  return currentTime.value / (currentsong.value?.dt / 1000)
 })
 
 const { modeIcon, changeMode } = useMode()
 const { getFavoriteIcon, toggleFavorite } = useFavorite()
 const { cdCls, cdRef, cdImageRef } = useCd()
 const { lyricScrollRef, lyricListRef, currentLyric, currentLineNum, playLyric, stopLyric, playingLyric, nextLyric } = useLyric({ songReady, currentTime })
-watch(currentsong, async (newsong) => {
-  if (!newsong.id) {
+const { currentShow, middleLStyle, middleRStyle, onMiddleTouchStart, onMiddleTouchMove, onMiddleTouchEnd } = useMiddleInteractive()
+const { cdWrapperRef, enter, afterEnter, leave, afterLeave } = useAnimation()
+
+watch(songId, async (newsongId) => {
+  if (!newsongId) {
     return
   }
   currentTime.value = 0
@@ -146,8 +182,8 @@ watch(currentsong, async (newsong) => {
   const audioEl = audioRef.value
   audioEl.pause()
   audioEl.currentTime = 0
-  // audioEl.src = `https://music.163.com/song/media/outer/url?id=${newsong.id}.mp3`
-  audioEl.src = await store.dispatch('getSongURL', { id: newsong.id })
+  store.dispatch('getSongDetail', { ids: newsongId })
+  audioEl.src = await store.dispatch('getSongURL', { id: newsongId })
   audioEl.load()
   audioEl.addEventListener('loadeddata', () => {
     audioEl.play()
@@ -259,7 +295,7 @@ const updateTime = (e) => {
 
 const onProgressChangeing = (progress) => {
   progressChanging = true
-  currentTime.value = (currentsong.value.dt / 1000) * progress
+  currentTime.value = (currentsong.value?.dt / 1000) * progress
   playLyric()
   stopLyric()
 }

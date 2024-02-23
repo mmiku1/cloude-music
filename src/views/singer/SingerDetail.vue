@@ -73,7 +73,7 @@ const getSingerId = computed(() => {
   z-index: 10;
   top: 0;
   left: 0;
-  bottom: 0;
+  bottom: 90px;
   right: 0;
   background: $color-background;
 }

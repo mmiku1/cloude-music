@@ -226,8 +226,41 @@ export default createStore({
         commit('setPlayList', state.sequenceList)
       }
       commit('setPlayMode', mode)
-    }
+    },
 
+    // 从播放列表中删除歌曲
+    removeSong({ commit, state }, song) {
+      const sequenceList = state.sequenceList.slice()
+      const playlist = state.playlist.slice()
+      const sequenceIndex = sequenceList.findIndex((item) => {
+        return item.id === song.id
+      })
+      const playIndex = playlist.findIndex((item) => {
+        return item.id === song.id
+      })
+
+      if (sequenceIndex < 0 || playIndex < 0) {
+        return
+      }
+
+      sequenceList.splice(sequenceIndex, 1)
+      playlist.splice(playIndex, 1)
+      let currentIndex = state.currentIndex
+      if (playIndex < currentIndex || currentIndex === playlist.length) {
+        currentIndex--
+      }
+      commit('setSequenceList', sequenceList)
+      commit('setPlayList', playlist)
+      commit('setCurrentIndex', currentIndex)
+    },
+
+    // 清空播放列表
+    clearSongList({ commit }) {
+      commit('setSequenceList', [])
+      commit('setPlayList', [])
+      commit('setCurrentIndex', [])
+      commit('setPlayingState', false)
+    }
   },
   modules: {
   }

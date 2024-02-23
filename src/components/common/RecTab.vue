@@ -27,8 +27,8 @@ export default defineComponent({
         path: '/discover/toplist'
       },
       {
-        name: '歌单',
-        path: '/discover/songlist'
+        name: '播客',
+        path: '/discover/podcast'
       },
       {
         name: '助眠',
@@ -49,7 +49,7 @@ export default defineComponent({
   height: 44px;
   line-height: 44px;
   font-size: $font-size-medium;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 
   .tab-item {
     flex: 1;

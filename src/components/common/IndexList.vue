@@ -128,7 +128,7 @@ const onItemClick = (id) => {
 
 <style lang="scss" scoped>
 .fixed {
-  margin: 0 0 10px 20px;
+  margin-left: 20px;
   .fixed-list {
     display: flex;
     flex-direction: column;
@@ -136,7 +136,7 @@ const onItemClick = (id) => {
       display: flex;
       flex-direction: row;
       .area-item {
-        margin: 10px 40px 10px 0;
+        margin: 5px 40px 10px 0;
       }
     }
     .singer-type {
@@ -168,7 +168,6 @@ const onItemClick = (id) => {
   overflow: hidden;
   background: $color-background;
   .group {
-    padding-bottom: 30px;
     .title {
       height: 30px;
       line-height: 30px;

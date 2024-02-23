@@ -1,8 +1,8 @@
 <template>
   <my-header></my-header>
   <router-view></router-view>
-  <my-bottom></my-bottom>
   <comm-player></comm-player>
+  <my-bottom></my-bottom>
 </template>
 
 <script setup>

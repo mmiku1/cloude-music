@@ -1,5 +1,5 @@
 <template>
-  <div>歌单</div>
+  <div>播客</div>
 </template>
 
 <script setup>

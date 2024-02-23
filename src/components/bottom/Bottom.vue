@@ -1,6 +1,6 @@
 Bottom.vue:
 <template>
-  <div class="bottom">
+  <div class="bottom" v-show="!fullScreen">
     <router-link
       class="bottom-item"
       v-for="tab in tabs"
@@ -9,7 +9,7 @@ Bottom.vue:
     >
       <div class="bottom-content">
         <img
-          :src="$route.path === tab.path ? tab.activeIcon : tab.icon"
+          :src="$route.path.includes(tab.path) ? tab.activeIcon : tab.icon"
           class="bottom-icon"
         />
         <span class="bottom-link">
@@ -21,7 +21,8 @@ Bottom.vue:
 </template>
 
 <script setup>
-import { defineComponent, reactive } from 'vue'
+import { computed, defineComponent, reactive } from 'vue'
+import { useStore } from 'vuex'
 
 defineComponent({
   name: 'MyBottom'
@@ -54,23 +55,29 @@ const tabs = reactive([
   }
 ])
 
+const store = useStore()
+const fullScreen = computed(() => store.state.fullScreen)
+
 </script>
 
 <style lang="scss" scoped>
 .bottom {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
   display: flex;
+  align-items: center;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 180;
+  width: 100%;
   height: 60px;
-  line-height: 60px;
   font-size: $font-size-medium;
-
+  background: $color-night-background;
   .bottom-item {
     flex: 1;
     text-align: center;
 
     .bottom-content {
+      margin-top: 10px;
       display: flex;
       flex-direction: column;
       align-items: center;

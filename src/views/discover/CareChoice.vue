@@ -332,7 +332,7 @@ const loading = computed(() => {
     .album {
       margin: 30px 0 20px 20px;
       box-sizing: border-box;
-      height: 400px;
+      height: 450px;
       .album-wrapper {
         display: flex;
         align-items: center;

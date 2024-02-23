@@ -238,7 +238,7 @@ const randomPlay = (songs) => {
         justify-content: center;
         text-align: center;
         position: relative;
-        background-color: $color-background-b;
+        background-color: $color-background-a;
         margin: 10px 10px 0 10px;
         .desc-name {
           font-size: $font-size-large;

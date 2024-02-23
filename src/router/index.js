@@ -6,7 +6,7 @@ import SingerDetail from '@/views/singer/SingerDetail.vue'
 import MyPage from '@/views/MyPage.vue'
 import CareChoice from '@/views/discover/CareChoice.vue'
 import TopList from '@/views/TopList.vue'
-import SongList from '@/views/SongList.vue'
+import SongList from '@/views/PodCast.vue'
 import HelpSleep from '@/views/HelpSleep.vue'
 
 const routes = [
@@ -33,7 +33,7 @@ const routes = [
         component: TopList
       },
       {
-        path: '/discover/songlist',
+        path: '/discover/podcast',
         component: SongList
       },
       {
